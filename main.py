@@ -50,6 +50,11 @@ if __name__ == "__main__":
     if len(sys.argv) < 3:
         print("Uso: python3 main.py /dev/videoX PUERTO")
         sys.exit(1)
-    device = sys.argv[1]
+        
+    device: str = sys.argv[1]
+    
+    if device.isnumeric():
+        device = int(device)
+        
     port = int(sys.argv[2])
     uvicorn.run(lambda: create_app(device), host="0.0.0.0", port=port)
