@@ -29,11 +29,13 @@ def create_app(device_path: str) -> FastAPI:
 
     @app.get("/", response_class=HTMLResponse)
     def index():
-        return """
+        
+        return f"""
         <html>
-            <head><title>Webcam Stream</title></head>
+            <head><title>{device}</title></head>
+            <meta http-equiv="refresh" content="0.1">
             <body>
-                <h1>Webcam Stream</h1>
+            <h1>Video Stream from {device}</h1>
                 <img src="/video">
             </body>
         </html>
@@ -50,11 +52,15 @@ if __name__ == "__main__":
     if len(sys.argv) < 3:
         print("Uso: python3 main.py /dev/videoX PUERTO")
         sys.exit(1)
-        
+
+    global device
+    global port
+
     device: str = sys.argv[1]
     
     if device.isnumeric():
         device = int(device)
         
     port = int(sys.argv[2])
+
     uvicorn.run(lambda: create_app(device), host="0.0.0.0", port=port)
