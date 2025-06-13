@@ -49,8 +49,8 @@ http://YOUR_SERVER_IP:8501
 ## 📦 Download
 
 ```bash
-git clone https://github.com/your-username/webcam-streamer.git
-cd webcam-streamer
+git clone https://github.com/offerrall/fastapi_webcam_stream
+cd fastapi_webcam_stream
 ```
 
 ## 📝 License
