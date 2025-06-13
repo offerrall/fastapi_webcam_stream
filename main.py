@@ -4,12 +4,14 @@ from contextlib import asynccontextmanager
 import cv2
 import sys
 
-def create_app(device_path: str) -> FastAPI:
+def create_app(device_path: str, port: int) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         camera = cv2.VideoCapture(device_path)
         app.state.camera = camera
         app.state.running = True
+        app.state.device_path = device_path
+        app.state.port = port
         yield
         app.state.running = False
         if camera.isOpened():
@@ -29,13 +31,13 @@ def create_app(device_path: str) -> FastAPI:
 
     @app.get("/", response_class=HTMLResponse)
     def index():
-        
         return f"""
         <html>
-            <head><title>{device}</title></head>
+            <head><title>{app.state.device_path}</title></head>
             <meta http-equiv="refresh" content="0.1">
             <body>
-            <h1>Video Stream from {device}</h1>
+                <h1>Video Stream from {app.state.device_path}</h1>
+                <h2>Puerto: {app.state.port}</h2>
                 <img src="/video">
             </body>
         </html>
@@ -53,14 +55,10 @@ if __name__ == "__main__":
         print("Uso: python3 main.py /dev/videoX PUERTO")
         sys.exit(1)
 
-    global device
-    global port
-
-    device: str = sys.argv[1]
-    
+    device = sys.argv[1]
     if device.isnumeric():
         device = int(device)
-        
+
     port = int(sys.argv[2])
 
-    uvicorn.run(lambda: create_app(device), host="0.0.0.0", port=port)
+    uvicorn.run(lambda: create_app(device, port), host="0.0.0.0", port=port)
