@@ -34,7 +34,6 @@ def create_app(device_path: str, port: int) -> FastAPI:
         return f"""
         <html>
             <head><title>{app.state.device_path}</title></head>
-            <meta http-equiv="refresh" content="0.1">
             <body>
                 <h1>Video Stream from {app.state.device_path}</h1>
                 <h2>Puerto: {app.state.port}</h2>
